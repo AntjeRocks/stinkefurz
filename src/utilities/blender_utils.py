@@ -19,20 +19,34 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
-#
-# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
 import bpy
 
+from enums.blender_render_engines import (BlenderRenderEngine)
+from enums.blender_scene_names import BlenderSceneNames
+from utilities.logging_factory import setup_logger
+
+log = setup_logger(__name__)
+
 
 def create_new_blender_file(file_path: str, empty=True):
+    log.info(f"Creating new Blender File in: {file_path}")
     bpy.ops.wm.read_factory_settings(use_empty=empty)
+    rename_scene_main(bpy.context.scene)
     save_as_blender_main(file_path)
 
 
 def save_as_blender_main(file_path):
+    log.info(f"Saving Blender File in: {file_path}")
     bpy.ops.wm.save_as_mainfile(filepath=file_path)
 
 
-def set_render_engine(scn, engine_name: str):
-    scn.render.engine = engine_name
+def rename_scene_main(scn):
+    scene_name = BlenderSceneNames.MAIN_SCENE.value
+    log.info(f"Renaming Main Scene to: {scene_name}")
+    scn.name = scene_name
+
+
+def set_render_engine(engine: BlenderRenderEngine):
+    log.info(f"Setting up Blender Render Engine to: {engine.value}")
+    bpy.context.scene.render.engine = engine.value

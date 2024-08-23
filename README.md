@@ -38,7 +38,7 @@ Legally, you can name your project "Stinkefurz" without violating the AGPL-3.0 l
 
 Stinkefurz is based off MB-Lab 1.8.1.
 
-This fork is an attenpt to use MB-Lab directly with python without using it as a blender plugin to be able to automate character creations.
+This fork is an attempt to use MB-Lab directly with python without using it as a blender plugin to be able to automate character creations.
 
 All original blender models, textures etc. are forked from MB-Lab.
 

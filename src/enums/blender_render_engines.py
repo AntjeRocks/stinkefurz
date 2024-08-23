@@ -20,6 +20,10 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from utilities.logging_factory import setup_logger
+from enum import Enum
 
-log = setup_logger(__name__)
+
+class BlenderRenderEngine(Enum):
+    CYCLES = 'CYCLES'
+    BLENDER_EEVEE = 'BLENDER_EEVEE'
+    BLENDER_WORKBENCH = 'BLENDER_WORKBENCH'

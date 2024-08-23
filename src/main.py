@@ -19,11 +19,15 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
-#
-# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
+
+import logging
 
 from generate_model import create_new_humanoid
+from utilities.logging_factory import setup_logger
 
+log = setup_logger(__name__, logging.INFO)
 
 if __name__ == "__main__":
+    log.info("Started")
     create_new_humanoid("E:/BlenderAssets/blender/new.blend")
+    log.info("Finished")

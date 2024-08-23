@@ -19,34 +19,33 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
-#
-# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
 import os
 import time
 
 import bpy
 
-from mb_lab import algorithms
+from enums.blender_render_engines import BlenderRenderEngine
+from mb_lab import algorithms, object_ops
 from mb_lab import creation_tools_ops
 from mb_lab import file_ops
 from mb_lab import humanoid
 from mb_lab import measurescreator
 from mb_lab import morphcreator
-from mb_lab import object_ops
 from utilities import blender_utils
+from utilities.logging_factory import setup_logger
 
-mblab_use_cycles = False
-mblab_use_eevee = True
-mblab_use_lamps = True
+add_lamps = True
 mblab_humanoid = humanoid.Humanoid("1.8.1")
+
+log = setup_logger(__name__)
 
 
 def create_new_humanoid(file_path):
+    log.info("MOEp")
     blender_utils.create_new_blender_file(file_path)
 
     file_ops.configuration_done = None
-    scn = bpy.context.scene
     character_identifier = "f_ca01"
 
     rigging_type = "base"
@@ -61,17 +60,10 @@ def create_new_humanoid(file_path):
         obj["manuellab_rig"] = rigging_type
     mblab_humanoid.init_database(obj, character_identifier, rigging_type)
     if mblab_humanoid.has_data:
-        if mblab_use_cycles or mblab_use_eevee:
-            if mblab_use_cycles:
-                scn.render.engine = 'CYCLES'
-            else:
-                scn.render.engine = 'BLENDER_EEVEE'
-            if mblab_use_lamps:
-                object_ops.add_lighting()
-        else:
-            scn.render.engine = 'BLENDER_WORKBENCH'
+        blender_utils.set_render_engine(BlenderRenderEngine.BLENDER_EEVEE)
+        if add_lamps:
+            object_ops.add_lighting()
 
-        print("Rendering engine now is %s", scn.render.engine)
         init_morphing_props(mblab_humanoid)
         init_categories_props(mblab_humanoid)
         init_measures_props(mblab_humanoid)

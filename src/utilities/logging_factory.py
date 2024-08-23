@@ -20,6 +20,28 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from utilities.logging_factory import setup_logger
+import logging
 
-log = setup_logger(__name__)
+
+def setup_logger(name=None, level=logging.INFO):
+    # If no name is provided, use the root logger
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+
+    if not logger.hasHandlers():
+        # Create console handler with a higher log level
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.DEBUG)
+
+        # Create formatter and add it to the handlers
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        console_handler.setFormatter(formatter)
+
+        # Add the handler to the logger
+        logger.addHandler(console_handler)
+
+    return logger
+
+
+def get_logger(name):
+    return logging.getLogger(name)

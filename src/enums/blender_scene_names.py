@@ -20,6 +20,9 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from utilities.logging_factory import setup_logger
+from enum import Enum
 
-log = setup_logger(__name__)
+
+class BlenderSceneNames(Enum):
+    MAIN_SCENE = 'Stinkefurz_1'
+    SECONDARY_SCENE = 'Stinkefurz_2'
