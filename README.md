@@ -1,41 +1,55 @@
-# MB-Lab
 
-Character creation tool for Blender
+# Stinkefurz
 
-## Blender 4.0 Support
+---
 
-MB-Lab has been developed to work with Blender 4.0
+## Naming
 
-## Contributors wanted!
+me: Are there any restrictions why I shouldn't call my derivative of MB-Lab "Stinkefurz" ?
 
-We are a small bunch of developers and artists but we always need more! MB-Lab's code is quite complex and needs work, to either fix bugs or to add new features, Python programmers are always welcome! Do you have other skills? We need modelers to help with future base models for instance. Are you a specialist in rigging? We could use some help improving the rigs for MB-Lab. There are lots to do in this project, we can only do so much at a time so please feel free to join us, fork the repository and then make something cool.
+ChatGPT: From a legal and licensing perspective, there is no restriction in the AGPL-3.0 that would prevent you from naming your derivative project "Stinkefurz." You are free to choose any name for your project as long as you comply with the license terms, such as maintaining the same AGPL-3.0 license, providing proper attribution, and making the source code available.
 
-## About
+However, there are a few practical considerations to keep in mind when naming your project:
+1. Professionalism and Perception:
+
+    The name of your project can impact how it is perceived by the community, potential users, and contributors. A name like "Stinkefurz" (which translates to "stinky fart" in English) might be viewed as humorous or whimsical, but it might also be seen as unprofessional depending on your target audience. Consider how the name aligns with the purpose and tone of your project.
+
+2. Searchability and Branding:
+
+    A name that is unique but also descriptive can help with branding and searchability. If you want your project to be taken seriously and easily found by users who might be interested in it, choosing a name that reflects its function or its improvements over the original project could be beneficial.
+
+3. Trademark Considerations:
+
+    While "Stinkefurz" is unlikely to be a trademarked term, it's always good to ensure that the name you choose doesn't infringe on any existing trademarks, especially if you plan to distribute or commercialize the project.
+
+4. Community and Collaboration:
+
+    If you plan to build a community around your project or attract contributors, the name might influence whether people are drawn to it. A humorous name could be appealing in certain contexts, but it might also limit your audience if it is perceived as too informal.
+
+Conclusion:
+
+Legally, you can name your project "Stinkefurz" without violating the AGPL-3.0 license, as long as you adhere to the license's other conditions. However, consider the broader implications of the name on the project's reception and success in the open-source community. If you're comfortable with these considerations, then there's no restriction preventing you from using that name.
+
+---
+
+## History
+
+### Stinkefurz
+
+Stinkefurz is based off MB-Lab 1.8.1.
+
+This fork is an attenpt to use MB-Lab directly with python without using it as a blender plugin to be able to automate character creations.
+
+All original blender models, textures etc. are forked from MB-Lab.
+
+### MB-Lab 1.8.1
 
 MB-Lab is a community developed project based off ManuelBastioniLAB.
 
 This fork is an attempt to keep this addon going forward as the original author is no longer developing ManuelBastioniLAB
 
-# MB-Lab 1.8.1
 
-Final version of MB-Lab as development has moved onto Charmorph
-
-## Requirements
-
-- MB-Lab now requires Blender 4.0.0 +
-
-### Added
-
-- UCSS CEL Shader added to Anime models
-
-## Known Issues
-
-- MB-Dev tools may contain bugs that are unknown at this time
-- Importing BVH animation files is buggy
-- Hair presets have the old PrincipledHairBSDF which will result in incorrect rendering
-- Skin color and bump mapping change slightly when finalizing
-
-## ManuelBastioniLAB 1.6.1a
+### ManuelBastioniLAB 1.6.1a
 
 We are including this for historical purposes as the website, videos and social media accounts are offline.
 
