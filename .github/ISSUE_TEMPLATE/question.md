@@ -1,10 +1,8 @@
 ---
 name: Question
-about: Questions related to MB-Lab
+about: Questions related to Stinkefurz
 title: ''
 labels: ''
 assignees: ''
 
 ---
-
-

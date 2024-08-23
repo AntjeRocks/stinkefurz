@@ -1,6 +1,6 @@
-# MB-Lab
+# Stinkefurz
 #
-# MB-Lab fork website : https://github.com/animate1978/MB-Lab
+# Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
