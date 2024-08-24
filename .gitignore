@@ -1,4 +1,5 @@
 __pycache__
 .idea/
 data/humanoid_library.blend1
-src/run_blender.ps1
+/src/run_blender.ps1
+/src/mb_lab/assets/
