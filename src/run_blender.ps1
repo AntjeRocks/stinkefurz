@@ -1,5 +1,5 @@
-$env:PYTHONPATH = "C:\Users\Fluffy\PycharmProjects\stinkefurz\src"
+$env:PYTHONPATH = {absolute path to src folder}
 
-Start-Process -FilePath "C:\Program Files\Blender Foundation\Blender 4.0\blender.exe" `
-              -ArgumentList "--background", "--python", "C:\Users\Fluffy\PycharmProjects\stinkefurz\src\main.py" `
+Start-Process -FilePath {absolute path to blender.exe (blender 4.0.2)} `
+              -ArgumentList "--background", "--python", {absolute path to main.py (in src)} `
               -NoNewWindow -Wait
