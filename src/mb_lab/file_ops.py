@@ -2,6 +2,9 @@
 #
 # Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
+# Portions of this code are derived from the MB-Lab project:
+# https://github.com/animate1978/MB-Lab
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -138,7 +141,7 @@ def get_configuration():
 def get_blendlibrary_path():
     data_path = get_data_path()
     if data_path:
-        return os.path.join(data_path, "humanoid_library.blend")
+        return os.path.join(data_path, "humanoid.blend")
 
     logger.critical("Models library not found. Please check your Blender addons directory.")
     return None

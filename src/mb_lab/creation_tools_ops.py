@@ -2,6 +2,9 @@
 #
 # Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
+# Portions of this code are derived from the MB-Lab project:
+# https://github.com/animate1978/MB-Lab
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -318,18 +321,18 @@ def is_blend_file_exist():
     global config_content
     if len(config_content["data_directory"]) < 1:
         return False
-    dirpath = os.path.join(get_project_directory(), "humanoid_library.blend")
+    dirpath = os.path.join(get_project_directory(), "humanoid.blend")
     if os.path.isfile(dirpath):
         return True
     return False
 
 
 def get_blend_file_pathname():
-    return os.path.join(get_project_directory(), "humanoid_library.blend")
+    return os.path.join(get_project_directory(), "humanoid.blend")
 
 
 def get_blend_file_name():
-    return "humanoid_library.blend"
+    return "humanoid.blend"
 
 
 def load_blend_file():

@@ -2,6 +2,9 @@
 #
 # Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
+# Portions of this code are derived from the MB-Lab project:
+# https://github.com/animate1978/MB-Lab
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -249,20 +252,6 @@ def copy_wt(Name, viw, vid):
 
 
 ##############################################################################
-# COLLECTION OPS
-
-# get a list of all objects in collection
-def collection_object_list(collection):
-    return [o.name for o in bpy.data.collections[collection].objects[:]]
-
-
-# Add new collections
-def new_collection(Name):
-    new_coll = bpy.data.collections.new(Name)
-    bpy.context.scene.collection.children.link(new_coll)
-
-
-##############################################################################
 # PARENTING OPS
 
 def adoption(parent, child, type, index):
@@ -317,16 +306,8 @@ def new_modifier(obj, name, modifier_type, parameters):
                 logger.info("Setattr failed for attribute '%s' of modifier %s", parameter, name)
     return _new_modifier
 
-
-##############################################################################
-# ARMATURE OPS
-
-##############################################################################
-# SHAPEKEY OPS
-
 ##############################################################################
 # OBJECT OPS
-
 
 def remove_mesh(mesh, remove_materials=False):
     if remove_materials:
@@ -428,45 +409,3 @@ def bvhtree_from_obj_polygons(obj, indices_of_polygons_subset=None):
         polygons = [poly.vertices for poly in obj.data.polygons]
     vertices = [vert.co for vert in obj.data.vertices]
     return mathutils.bvhtree.BVHTree.FromPolygons(vertices, polygons)
-
-
-##############################################################################
-# LIGHTING_OPS
-
-def add_lighting():
-    # create light datablock, set attributes
-    mblight01 = bpy.data.lights.new(name="light_key", type='AREA')
-    mblight02 = bpy.data.lights.new(name="light_backlight", type='AREA')
-    mblight03 = bpy.data.lights.new(name="light_fill", type='AREA')
-
-    # create new object with our light datablock
-    light_object01 = bpy.data.objects.new(name="light_key", object_data=mblight01)
-    light_object02 = bpy.data.objects.new(name="light_backlight", object_data=mblight02)
-    light_object03 = bpy.data.objects.new(name="light_fill", object_data=mblight03)
-
-    # link light object
-    bpy.context.collection.objects.link(light_object01)
-    bpy.context.collection.objects.link(light_object02)
-    bpy.context.collection.objects.link(light_object03)
-
-    # make it active
-    bpy.context.view_layer.objects.active = light_object01
-    bpy.context.view_layer.objects.active = light_object02
-    bpy.context.view_layer.objects.active = light_object03
-
-    # change location, rotation and other settings
-    light_object01.location = (1.5, -1.5, 2.5)
-    light_object01.rotation_euler = (radians(0), radians(-70), radians(133))
-    light_object02.location = (-1.5, 1.5, 2.5)
-    light_object02.rotation_euler = (radians(-60), radians(0), radians(40))
-    light_object03.location = (-1.5, -2, 2.5)
-    light_object03.rotation_euler = (radians(0), radians(-70), radians(50))
-    mblight01.energy = 100
-    mblight01.color = (0.688, 0.914, 1)
-    mblight01.use_contact_shadow = True
-    mblight02.energy = 150
-    mblight02.color = (1, 1, 1)
-    mblight02.use_contact_shadow = True
-    mblight03.energy = 100
-    mblight03.color = (0.981, 1, 0.694)
-    mblight03.use_contact_shadow = True

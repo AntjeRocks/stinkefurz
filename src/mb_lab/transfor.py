@@ -2,6 +2,9 @@
 #
 # Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
+# Portions of this code are derived from the MB-Lab project:
+# https://github.com/animate1978/MB-Lab
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -29,9 +32,6 @@ import logging
 import bpy
 
 from . import file_ops
-
-# TODO pathlib might replace the current import os
-# from pathlib import Path
 
 logger = logging.getLogger(__name__)
 

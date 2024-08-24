@@ -2,6 +2,9 @@
 #
 # Stinkefurz fork website : https://github.com/AntjeRocks/stinkefurz
 #
+# Portions of this code are derived from the MB-Lab project:
+# https://github.com/animate1978/MB-Lab
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -19,6 +22,8 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
+#
+# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
 import os
 import time
@@ -26,13 +31,14 @@ import time
 import bpy
 
 from enums.blender_render_engines import BlenderRenderEngine
-from mb_lab import algorithms, object_ops
+from mb_lab import algorithms
 from mb_lab import creation_tools_ops
 from mb_lab import file_ops
 from mb_lab import humanoid
 from mb_lab import measurescreator
 from mb_lab import morphcreator
-from utilities import blender_utils
+from utilities.blender_light_utils import add_character_lighting
+from utilities.blender_utils import create_new_blender_file, set_render_engine, save_as_blender_main
 from utilities.logging_factory import setup_logger
 
 add_lamps = True
@@ -42,12 +48,10 @@ log = setup_logger(__name__)
 
 
 def create_new_humanoid(file_path):
-    log.info("MOEp")
-    blender_utils.create_new_blender_file(file_path)
+    create_new_blender_file(file_path)
 
     file_ops.configuration_done = None
     character_identifier = "f_ca01"
-
     rigging_type = "base"
     lib_filepath = file_ops.get_blendlibrary_path()
 
@@ -55,14 +59,15 @@ def create_new_humanoid(file_path):
     base_model_name = characters_config[character_identifier]["template_model"]
     obj = file_ops.import_object_from_lib(lib_filepath, base_model_name, character_identifier)
     if obj is not None:
+        log.warn("OBJECT IS NONE")
         obj["manuellab_vers"] = "1.8.1"
         obj["manuellab_id"] = character_identifier
         obj["manuellab_rig"] = rigging_type
     mblab_humanoid.init_database(obj, character_identifier, rigging_type)
     if mblab_humanoid.has_data:
-        blender_utils.set_render_engine(BlenderRenderEngine.BLENDER_EEVEE)
+        set_render_engine(BlenderRenderEngine.BLENDER_EEVEE)
         if add_lamps:
-            object_ops.add_lighting()
+            add_character_lighting()
 
         init_morphing_props(mblab_humanoid)
         init_categories_props(mblab_humanoid)
@@ -86,7 +91,7 @@ def create_new_humanoid(file_path):
         creation_tools_ops.init_config()
         algorithms.deselect_all_objects()
     algorithms.remove_censors()
-    blender_utils.save_as_blender_main(file_path)
+    save_as_blender_main(file_path)
 
 
 def init_morphing_props(humanoid_instance):
