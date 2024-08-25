@@ -239,7 +239,6 @@ class MorphingEngine:
     # logger.info("Finishing applied in {0} secs".format(time.time()-time1))
 
     def calculate_measures(self, measure_name=None, vert_coords=None):
-
         if not vert_coords:
             vert_coords = self.final_form
         measures = {}

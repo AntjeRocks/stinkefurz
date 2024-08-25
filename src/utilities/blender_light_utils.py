@@ -65,5 +65,5 @@ def _create_area_light(name, energy=100.0, location=(0, 0, 5), rotation=(0.0, 0.
     light_object = bpy.data.objects.new(name=name, object_data=light_data)
     light_object.location = location
     light_object.rotation_euler = (radians(rotation[0]), radians(rotation[1]), radians(rotation[2]))
-    light_collection = get_or_create_collection(blender_const.LIGHT_COLLECTION_NAME)
+    light_collection = get_or_create_collection(blender_const.COLLECTION_NAME_LIGHTS)
     light_collection.objects.link(light_object)

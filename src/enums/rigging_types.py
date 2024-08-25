@@ -22,12 +22,12 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
-#
-# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
-import os
+from enum import Enum
 
-from const import ROOT_DIR
 
-# path to humanoid blender file from project root
-PATH_TO_HUMANOID_BLENDER_FILE = os.path.join(ROOT_DIR, "assets/humanoid/humanoid.blend")
+class RiggingType(Enum):
+    BASE_FORWARD_KINEMATICS = "MBLab_skeleton_base_fk"
+    BASE_INVERSE_KINEMATICS = "MBLab_skeleton_base_ik"
+    SCELETON_FORWARD_KINEMATICS = "MBLab_skeleton_muscle_fk"
+    SCELETON_INVERSE_KINEMATICS = "MBLab_skeleton_muscle_ik"

@@ -33,6 +33,7 @@ import time
 import bpy
 import mathutils
 
+from utilities.assets_const import PATH_TO_HUMANOID_BLENDER_FILE
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -139,12 +140,13 @@ def get_configuration():
 
 
 def get_blendlibrary_path():
-    data_path = get_data_path()
-    if data_path:
-        return os.path.join(data_path, "humanoid.blend")
-
-    logger.critical("Models library not found. Please check your Blender addons directory.")
-    return None
+    return PATH_TO_HUMANOID_BLENDER_FILE
+    # data_path = get_data_path()
+    # if data_path:
+    #     return os.path.join(data_path, "humanoid.blend")
+    #
+    # logger.critical("Models library not found. Please check your Blender addons directory.")
+    # return None
 
 
 def simple_path(input_path, use_basename=True, max_len=50):

@@ -25,7 +25,13 @@
 
 
 # Scenes
-MAIN_SCENE_NAME = "Stinkefurz"
+SCENE_NAME_MAIN = "Stinkefurz"
 
 # Collections
-LIGHT_COLLECTION_NAME = "lights"
+COLLECTION_NAME_LIGHTS = "Lights"
+COLLECTION_NAME_CHARACTER = "Character"
+
+# Materials
+MATERIAL_CENSORED_SKIN_NAME = "MBlab_generic"
+MATERIAL_ANIME_SKIN = "MBLab_anime_skin"
+MATERIAL_HUMANOID_SKIN = "MBLab_skin3"

@@ -31,12 +31,17 @@ import time
 import bpy
 
 from enums.blender_render_engines import BlenderRenderEngine
+from enums.humanoid_base_model_identifier import HumanoidBaseModelIdentifier
+from enums.humanoid_base_model_names import HumanoidBaseModelName
+from enums.rigging_types import RiggingType
 from mb_lab import algorithms
 from mb_lab import creation_tools_ops
 from mb_lab import file_ops
 from mb_lab import humanoid
 from mb_lab import measurescreator
 from mb_lab import morphcreator
+from utilities.assets_utils import import_character_from_humanoid_blender_file
+from utilities.blender_censor_utils import remove_humanoid_censors
 from utilities.blender_light_utils import add_character_lighting
 from utilities.blender_utils import create_new_blender_file, set_render_engine, save_as_blender_main
 from utilities.logging_factory import setup_logger
@@ -51,18 +56,14 @@ def create_new_humanoid(file_path):
     create_new_blender_file(file_path)
 
     file_ops.configuration_done = None
-    character_identifier = "f_ca01"
-    rigging_type = "base"
-    lib_filepath = file_ops.get_blendlibrary_path()
+    rigging_type = RiggingType.BASE_INVERSE_KINEMATICS.value
+    character_identifier = HumanoidBaseModelIdentifier.CAUCASIAN_GYNOID.value
+    base_model_name = HumanoidBaseModelName.GYNOID.value
 
     characters_config = file_ops.get_configuration()
-    base_model_name = characters_config[character_identifier]["template_model"]
-    obj = file_ops.import_object_from_lib(lib_filepath, base_model_name, character_identifier)
-    if obj is not None:
-        log.warn("OBJECT IS NONE")
-        obj["manuellab_vers"] = "1.8.1"
-        obj["manuellab_id"] = character_identifier
-        obj["manuellab_rig"] = rigging_type
+    # log.info(f"characters_config: {characters_config}")
+
+    obj = import_character_from_humanoid_blender_file(base_model_name, character_identifier)
     mblab_humanoid.init_database(obj, character_identifier, rigging_type)
     if mblab_humanoid.has_data:
         set_render_engine(BlenderRenderEngine.BLENDER_EEVEE)
@@ -90,7 +91,7 @@ def create_new_humanoid(file_path):
         measurescreator.init_all()
         creation_tools_ops.init_config()
         algorithms.deselect_all_objects()
-    algorithms.remove_censors()
+    remove_humanoid_censors(character_identifier)
     save_as_blender_main(file_path)
 
 

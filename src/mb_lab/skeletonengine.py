@@ -56,16 +56,16 @@ class SkeletonEngine:
             self.joints_filename = character_config["joints_base_file"]
             self.joints_offset_filename = character_config["joints_offset_file"]
 
-            if rigging_type == "base":
+            if rigging_type == "MBLab_skeleton_base_fk":
                 self.skeleton_template_name = "MBLab_skeleton_base_fk"
                 self.groups_filename = character_config["vertexgroup_base_file"]
-            elif rigging_type == "ik":
+            elif rigging_type == "MBLab_skeleton_base_ik":
                 self.skeleton_template_name = "MBLab_skeleton_base_ik"
                 self.groups_filename = character_config["vertexgroup_base_file"]
-            elif rigging_type == "muscle":
+            elif rigging_type == "MBLab_skeleton_muscle_fk":
                 self.skeleton_template_name = "MBLab_skeleton_muscle_fk"
                 self.groups_filename = character_config["vertexgroup_muscle_file"]
-            elif rigging_type == "muscle_ik":
+            elif rigging_type == "MBLab_skeleton_muscle_ik":
                 self.skeleton_template_name = "MBLab_skeleton_muscle_ik"
                 self.groups_filename = character_config["vertexgroup_muscle_file"]
 

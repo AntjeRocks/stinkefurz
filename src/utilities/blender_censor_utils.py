@@ -25,9 +25,19 @@
 #
 # ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
-import os
+from utilities.blender_const import MATERIAL_CENSORED_SKIN_NAME, MATERIAL_ANIME_SKIN, MATERIAL_HUMANOID_SKIN
+from utilities.blender_material_utils import swap_material
+from utilities.blender_utils import get_object_by_name
+from utilities.logging_factory import setup_logger
 
-from const import ROOT_DIR
+log = setup_logger(__name__)
 
-# path to humanoid blender file from project root
-PATH_TO_HUMANOID_BLENDER_FILE = os.path.join(ROOT_DIR, "assets/humanoid/humanoid.blend")
+
+def remove_humanoid_censors(character_identifier):
+    log.info(f"Remove censors from humanoid: {character_identifier}")
+    character = get_object_by_name(character_identifier)
+    if character:
+        if character_identifier in ("f_an01", "f_an02", "m_an01", "m_an02"):
+            swap_material(character, MATERIAL_CENSORED_SKIN_NAME, MATERIAL_ANIME_SKIN)
+        else:
+            swap_material(character, MATERIAL_CENSORED_SKIN_NAME, MATERIAL_HUMANOID_SKIN)

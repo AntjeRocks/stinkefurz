@@ -22,12 +22,10 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ##### END GPL LICENSE BLOCK #####
-#
-# ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
-import os
+from enum import Enum
 
-from const import ROOT_DIR
 
-# path to humanoid blender file from project root
-PATH_TO_HUMANOID_BLENDER_FILE = os.path.join(ROOT_DIR, "assets/humanoid/humanoid.blend")
+class HumanoidBaseModelIdentifier(Enum):
+    CAUCASIAN_GYNOID = "f_ca01"
+    CAUCASIAN_ANDROID = "m_ca01"

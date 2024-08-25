@@ -25,9 +25,27 @@
 #
 # ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
-import os
+import bpy
 
-from const import ROOT_DIR
+from utilities.logging_factory import setup_logger
 
-# path to humanoid blender file from project root
-PATH_TO_HUMANOID_BLENDER_FILE = os.path.join(ROOT_DIR, "assets/humanoid/humanoid.blend")
+log = setup_logger(__name__)
+
+
+def swap_material(character, old_material_name, new_material_name):
+    log.info(f"Swap material from: {old_material_name} to: {new_material_name}")
+
+    if _material_exists(old_material_name) and _material_exists(new_material_name):
+        old_material = bpy.data.materials[old_material_name]
+        new_material = bpy.data.materials[new_material_name]
+
+        for i in range(0, len(character.data.materials)):
+            if character.data.materials[i] == old_material:
+                character.data.materials[i] = new_material
+    else:
+        log.error("Materials weren't found")
+        raise ValueError("Error while swapping materials, at least one material wasn't found.")
+
+
+def _material_exists(material_name):
+    return material_name in bpy.data.materials

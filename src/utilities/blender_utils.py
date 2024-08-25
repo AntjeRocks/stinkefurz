@@ -23,8 +23,6 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from math import radians
-
 import bpy
 
 from enums.blender_render_engines import (BlenderRenderEngine)
@@ -42,7 +40,7 @@ def create_new_blender_file(file_path: str, empty=True):
     """
     log.info(f"Creating new Blender File in: {file_path}")
     bpy.ops.wm.read_factory_settings(use_empty=empty)
-    rename_scene(bpy.context.scene, blender_const.MAIN_SCENE_NAME)
+    rename_scene(bpy.context.scene, blender_const.SCENE_NAME_MAIN)
     save_as_blender_main(file_path)
 
 
@@ -59,10 +57,10 @@ def rename_scene(scene: bpy.types.Scene, new_scene_name: str):
     bpy.context.window.scene = scene
 
 
-def get_scene(scene_name: str = blender_const.MAIN_SCENE_NAME):
+def get_scene(scene_name: str = blender_const.SCENE_NAME_MAIN):
     """"
     Returns main scene,
-    when scene_name is defined it will return given scene with scene_name,
+    when scene_name is defined it will return given scene,
     it will create the given scene_name if it doesn't exist and return it
     """
     scene = bpy.data.scenes.get(scene_name)
@@ -101,5 +99,21 @@ def get_or_create_collection(collection_name: str, parent_collection=None):
         parent_collection.children.link(new_collection)
         return new_collection
     else:
-        log.info(f"Collection: {collection_name} already exists")
+        log.info(f"Collection: {collection_name} already exists. Returning existing one.")
         return existing_collection
+
+
+def link_object_to_collection(object_to_link, collection_name: str):
+    """
+    Link object_to_link to given collection_name,
+    creates collection if not present
+    """
+    log.info(f"Linking object: {object_to_link} to collection: {collection_name}")
+    collection = get_or_create_collection(collection_name)
+    collection.objects.link(object_to_link)
+
+
+def get_object_by_name(object_name):
+    """"Fetching for blender objects by object_name"""
+    log.info(f"Get object: {object_name}")
+    return bpy.data.objects.get(object_name)
