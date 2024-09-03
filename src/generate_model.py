@@ -25,275 +25,51 @@
 #
 # ManuelbastioniLAB - Copyright (C) 2015-2018 Manuel Bastioni
 
-import os
-import time
-
-import bpy
-
-from enums.blender_render_engines import BlenderRenderEngine
-from enums.humanoid_base_model_identifier import HumanoidBaseModelIdentifier
-from enums.humanoid_base_model_names import HumanoidBaseModelName
-from enums.rigging_types import RiggingType
-from mb_lab import algorithms
-from mb_lab import creation_tools_ops
-from mb_lab import file_ops
-from mb_lab import humanoid
-from mb_lab import measurescreator
-from mb_lab import morphcreator
-from utilities.assets_utils import import_character_from_humanoid_blender_file
+from configuration import BASE_MODEL_IDENTIFIER, BASE_MODEL_NAME, RIGGING_TYPE, BLENDER_RENDER_ENGINE, ADD_LIGHTING
+from humanoid.humanoid import Humanoid
+from humanoid.humanoid_utils import set_character_id
+from morphing.character_morphing import CharacterMorphing
 from utilities.blender_censor_utils import remove_humanoid_censors
 from utilities.blender_light_utils import add_character_lighting
 from utilities.blender_utils import create_new_blender_file, set_render_engine, save_as_blender_main
 from utilities.logging_factory import setup_logger
 
-add_lamps = True
-mblab_humanoid = humanoid.Humanoid("1.8.1")
+humanoid_instances = {}
 
 log = setup_logger(__name__)
 
 
 def create_new_humanoid(file_path):
+    my_humanoid = _create_humanoid_base_model(file_path=file_path)
+
+    character_morphing = CharacterMorphing(humanoid_instance=my_humanoid)
+    character_morphing.change_and_apply_single_morph(morph_name="Feet_SizeZ_max", new_value=3.5)
+
+    _finalize_humanoid_creation(humanoid=my_humanoid, file_path=file_path)
+
+
+def _create_humanoid_base_model(file_path):
     create_new_blender_file(file_path)
 
-    file_ops.configuration_done = None
-    rigging_type = RiggingType.BASE_INVERSE_KINEMATICS.value
-    character_identifier = HumanoidBaseModelIdentifier.CAUCASIAN_GYNOID.value
-    base_model_name = HumanoidBaseModelName.GYNOID.value
+    humanoid = Humanoid("123", "Anna-Maria",
+                        BASE_MODEL_NAME, BASE_MODEL_IDENTIFIER, RIGGING_TYPE)
 
-    characters_config = file_ops.get_configuration()
-    # log.info(f"characters_config: {characters_config}")
+    blend_file_character = humanoid.copy_base_model_to_current_blender_context()
 
-    obj = import_character_from_humanoid_blender_file(base_model_name, character_identifier)
-    mblab_humanoid.init_database(obj, character_identifier, rigging_type)
-    if mblab_humanoid.has_data:
-        set_render_engine(BlenderRenderEngine.BLENDER_EEVEE)
-        if add_lamps:
-            add_character_lighting()
+    if blend_file_character:
+        set_character_id(blend_file_character)
+        humanoid_instances[humanoid.base_model_identifier] = humanoid
+    else:
+        raise ValueError("Character base model was not found in humanoid.blend file")
+    return humanoid
 
-        init_morphing_props(mblab_humanoid)
-        init_categories_props(mblab_humanoid)
-        init_measures_props(mblab_humanoid)
-        # init_restposes_props(mblab_humanoid)
-        init_presets_props(mblab_humanoid)
-        init_ethnic_props(mblab_humanoid)
-        init_metaparameters_props(mblab_humanoid)
-        init_material_parameters_props(mblab_humanoid)
-        mblab_humanoid.update_materials()
 
-        mblab_humanoid.reset_mesh()
-        mblab_humanoid.update_character(mode="update_all")
+def _apply_configurations():
+    set_render_engine(BLENDER_RENDER_ENGINE)
+    if ADD_LIGHTING:
+        add_character_lighting()
 
-        # All inits for creation tools.
-        morphcreator.init_morph_names_database()
-        # mbcrea_expressionscreator.reset_expressions_items()
-        # mbcrea_transfor.set_scene(scn)
-        init_cmd_props(mblab_humanoid)
-        measurescreator.init_all()
-        creation_tools_ops.init_config()
-        algorithms.deselect_all_objects()
-    remove_humanoid_censors(character_identifier)
+
+def _finalize_humanoid_creation(humanoid, file_path):
+    remove_humanoid_censors(humanoid.name, humanoid.is_anime_model)
     save_as_blender_main(file_path)
-
-
-def init_morphing_props(humanoid_instance):
-    for prop in humanoid_instance.character_data:
-        setattr(
-            bpy.types.Object,
-            prop,
-            bpy.props.FloatProperty(
-                name=prop.split("_")[1],
-                min=-5.0,
-                max=5.0,
-                soft_min=0.0,
-                soft_max=1.0,
-                precision=3,
-                default=0.5,
-                subtype='FACTOR',
-                update=realtime_update))
-
-
-def realtime_update(self, context):
-    if mblab_humanoid.bodydata_realtime_activated:
-        time1 = time.time()
-        scn = bpy.context.scene
-        mblab_humanoid.update_character(category_name=scn.morphingCategory, mode="update_realtime")
-        if scn.morphingCategory != "Expressions":
-            mblab_humanoid.update_character(category_name="Expressions", mode="update_realtime")
-        mblab_humanoid.sync_gui_according_measures()
-        print("realtime_update: {0}".format(time.time() - time1))
-
-
-def init_categories_props(humanoid_instance):
-    bpy.types.Scene.morphingCategory = bpy.props.EnumProperty(
-        items=get_categories_enum(),
-        update=sync_character_to_props,
-        name="Morphing categories")
-
-    # Sub-categories for "Facial expressions"
-    # mbcrea_expressionscreator.set_expressions_modifiers(mblab_humanoid)
-    # sub_categories_enum = mbcrea_expressionscreator.get_expressions_sub_categories()
-
-    # bpy.types.Scene.expressionsSubCategory = bpy.props.EnumProperty(
-    #     items=sub_categories_enum,
-    #     update=sync_character_to_props,
-    #     name="Expressions sub-categories")
-
-    # Special properties used by transfor.Transfor
-    bpy.types.Scene.transforMorphingCategory = bpy.props.EnumProperty(
-        items=get_categories_enum(["Expressions"]),
-        update=sync_character_to_props,
-        name="Morphing categories")
-
-
-def sync_character_to_props(self, context):
-    mblab_humanoid.sync_character_data_to_obj_props()
-    mblab_humanoid.update_character()
-
-
-def get_categories_enum(exclude=None):
-    if exclude is None:
-        exclude = []
-    categories_enum = []
-    # All categories for "Body Measures"
-    for category in mblab_humanoid.get_categories(exclude):
-        categories_enum.append(
-            (category.name, category.name, category.name))
-    return categories_enum
-
-
-def init_measures_props(humanoid_instance):
-    for measure_name, measure_val in humanoid_instance.morph_engine.measures.items():
-        setattr(
-            bpy.types.Object,
-            measure_name,
-            bpy.props.FloatProperty(
-                name=measure_name, min=0.0, max=500.0,
-                subtype='FACTOR',
-                default=measure_val))
-    humanoid_instance.sync_gui_according_measures()
-
-
-def init_restposes_props(humanoid_instance):
-    if humanoid_instance.exists_rest_poses_database():
-        restpose_items = file_ops.generate_items_list(humanoid_instance.restposes_path)
-        bpy.types.Object.rest_pose = bpy.props.EnumProperty(
-            items=restpose_items,
-            name="Rest pose",
-            default=restpose_items[0][0],
-            update=restpose_update)
-
-
-def restpose_update(self, context):
-    armature = mblab_humanoid.get_armature()
-    filepath = os.path.join(
-        mblab_humanoid.restposes_path,
-        "".join([armature.rest_pose, ".json"]))
-    # mblab_retarget.load_pose(filepath, armature)
-
-
-def init_presets_props(humanoid_instance):
-    if humanoid_instance.exists_preset_database():
-        preset_items = file_ops.generate_items_list(humanoid_instance.presets_path)
-        bpy.types.Object.preset = bpy.props.EnumProperty(
-            items=preset_items,
-            name="Types",
-            update=preset_update)
-
-
-def init_ethnic_props(humanoid_instance):
-    if humanoid_instance.exists_phenotype_database():
-        ethnic_items = file_ops.generate_items_list(humanoid_instance.phenotypes_path)
-        bpy.types.Object.ethnic = bpy.props.EnumProperty(
-            items=ethnic_items,
-            name="Phenotype",
-            update=ethnic_update)
-
-
-def init_metaparameters_props(humanoid_instance):
-    for meta_data_prop in humanoid_instance.character_metaproperties.keys():
-        upd_function = None
-
-        if "age" in meta_data_prop:
-            upd_function = age_update
-        if "mass" in meta_data_prop:
-            upd_function = mass_update
-        if "tone" in meta_data_prop:
-            upd_function = tone_update
-        if "last" in meta_data_prop:
-            upd_function = None
-
-        if "last_" not in meta_data_prop:
-            setattr(
-                bpy.types.Object,
-                meta_data_prop,
-                bpy.props.FloatProperty(
-                    name=meta_data_prop, min=-1.0, max=1.0,
-                    precision=3,
-                    default=0.0,
-                    subtype='FACTOR',
-                    update=upd_function))
-
-
-def preset_update(self, context):
-    scn = bpy.context.scene
-    obj = mblab_humanoid.get_object()
-    filepath = os.path.join(
-        mblab_humanoid.presets_path,
-        "".join([obj.preset, ".json"]))
-    mblab_humanoid.load_character(filepath, mix=scn.mblab_mix_characters)
-
-
-def ethnic_update(self, context):
-    scn = bpy.context.scene
-    obj = mblab_humanoid.get_object()
-    filepath = os.path.join(
-        mblab_humanoid.phenotypes_path,
-        "".join([obj.ethnic, ".json"]))
-    mblab_humanoid.load_character(filepath, mix=scn.mblab_mix_characters)
-
-
-def age_update(self, context):
-    time1 = time.time()
-    if mblab_humanoid.metadata_realtime_activated:
-        time1 = time.time()
-        mblab_humanoid.calculate_transformation("AGE")
-
-
-def mass_update(self, context):
-    if mblab_humanoid.metadata_realtime_activated:
-        mblab_humanoid.calculate_transformation("FAT")
-
-
-def tone_update(self, context):
-    if mblab_humanoid.metadata_realtime_activated:
-        mblab_humanoid.calculate_transformation("MUSCLE")
-
-
-def init_material_parameters_props(humanoid_instance):
-    for material_data_prop, value in humanoid_instance.character_material_properties.items():
-        setattr(
-            bpy.types.Object,
-            material_data_prop,
-            bpy.props.FloatProperty(
-                name=material_data_prop,
-                min=0.0,
-                max=1.0,
-                precision=2,
-                subtype='FACTOR',
-                update=material_update,
-                default=value))
-
-
-def material_update(self, context):
-    if mblab_humanoid.material_realtime_activated:
-        mblab_humanoid.update_materials(update_textures_nodes=False)
-
-
-def init_cmd_props(humanoid_instance):
-    for prop in morphcreator.get_all_cmd_attr_names(humanoid_instance):
-        setattr(
-            bpy.types.Object,
-            prop,
-            bpy.props.BoolProperty(
-                name=prop.split("_")[2],
-                default=False))

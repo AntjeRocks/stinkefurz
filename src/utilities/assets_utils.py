@@ -27,6 +27,7 @@
 
 import bpy
 
+from enums.humanoid_base_model_names import HumanoidBaseModelName
 from utilities.assets_const import PATH_TO_HUMANOID_BLENDER_FILE
 from utilities.blender_const import COLLECTION_NAME_CHARACTER
 from utilities.blender_utils import link_object_to_collection, get_object_by_name
@@ -35,8 +36,8 @@ from utilities.logging_factory import setup_logger
 log = setup_logger(__name__)
 
 
-def import_character_from_humanoid_blender_file(char_import_name: str, char_saving_name: str):
-    """"Imports character from 'humanoid.blend' file and links it to the current one and returns the character"""
+def import_character_from_humanoid_blender_file(char_import_name: HumanoidBaseModelName, char_saving_name: str):
+    """Imports character from 'humanoid.blend' file and links it to the current one and returns the character"""
     if char_import_name:
         log.info(f"Importing character: {char_import_name}")
         character = _get_single_character_from_humanoid_library(char_import_name)

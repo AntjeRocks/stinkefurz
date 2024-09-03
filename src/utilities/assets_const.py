@@ -27,7 +27,7 @@
 
 import os
 
-from const import ROOT_DIR
+from configuration import ROOT_DIR
 
 # path to humanoid blender file from project root
 PATH_TO_HUMANOID_BLENDER_FILE = os.path.join(ROOT_DIR, "assets/humanoid/humanoid.blend")

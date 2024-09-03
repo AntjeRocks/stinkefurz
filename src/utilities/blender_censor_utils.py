@@ -33,11 +33,11 @@ from utilities.logging_factory import setup_logger
 log = setup_logger(__name__)
 
 
-def remove_humanoid_censors(character_identifier):
-    log.info(f"Remove censors from humanoid: {character_identifier}")
-    character = get_object_by_name(character_identifier)
+def remove_humanoid_censors(name, is_anime_model):
+    log.info(f"Remove censors from humanoid: {name}")
+    character = get_object_by_name(name)
     if character:
-        if character_identifier in ("f_an01", "f_an02", "m_an01", "m_an02"):
+        if is_anime_model:
             swap_material(character, MATERIAL_CENSORED_SKIN_NAME, MATERIAL_ANIME_SKIN)
         else:
             swap_material(character, MATERIAL_CENSORED_SKIN_NAME, MATERIAL_HUMANOID_SKIN)

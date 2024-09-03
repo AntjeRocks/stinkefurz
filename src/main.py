@@ -33,4 +33,5 @@ log = setup_logger(__name__, logging.INFO)
 if __name__ == "__main__":
     log.info("Started")
     create_new_humanoid("E:/BlenderAssets/blender/new.blend")
+    # create_new_humanoid("E:/new.blend")
     log.info("Finished")

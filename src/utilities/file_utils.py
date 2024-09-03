@@ -23,6 +23,16 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import json
+
 from utilities.logging_factory import setup_logger
 
 log = setup_logger(__name__)
+
+
+def load_json_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except IOError:
+        raise IOError("Writing permission denied for %s", file_path)
